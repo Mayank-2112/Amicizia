@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import {
     Card,
     CardContent,
@@ -10,9 +10,42 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
   
 export default function SignUp() {
+    const [formData, setFormData]= useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleChange = (e)=>{
+    setFormData({...formData, [e.target.id]:e.target.value});
+  }
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    if (!formData.username || !formData.email || !formData.password){
+      return setErrorMessage('Please fill all the fields!!');
+    }
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+        const res = await fetch('/server/auth/signup',{
+          method:'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if(data.success === false){
+          setErrorMessage(data.message);
+        }
+        setLoading(false);
+        if(res.ok){
+          navigate('/');
+        }
+    } catch (error) {
+        setErrorMessage(error.message);
+        setLoading(false);
+    }
+  }
   return (
     <>
     <div className='flex justify-center items-center my-10 mx-auto max-w-6xl'>
@@ -26,22 +59,24 @@ export default function SignUp() {
             </CardHeader>
             <CardContent>
                 <div className='max-w-4xl w-full'>
-                    <div className='flex gap-4 mx-auto justify-evenly w-full'>
-                        <Button variant='outline' className='border-blue-500 hover:bg-blue-500 hover:text-white'><span className='text-xl font-semibold mr-2'>G</span>Google</Button>
-                        <Button variant='outline' className='border-blue-500 hover:bg-blue-500 hover:text-white'><span className='text-xl font-semibold mr-2'>f</span>Facebook</Button>
-                    </div>
-                    <p className='uppercase text-xs text-slate-500 m-3'>or continue with</p>
-                    <div className='flex flex-col gap-2 mx-auto max'>
-                        <Label className='text-lg self-start'>Email</Label>
-                        <Input type='email' placeholder='Email'/>
-                        <Label className='text-lg self-start'>Username</Label>
-                        <Input type='username' placeholder='Username'/>
-                        <Label className='text-lg self-start'>Password</Label>
-                        <Input type='password' placeholder='Password'/>
-                    </div>
-                    <div className='pt-5'>
-                        <Button className='w-full uppercase text-md p-3 rounded-xl'>Sign Up</Button>
-                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div className='flex gap-4 mx-auto justify-evenly w-full'>
+                            <Button variant='outline' className='border-blue-500 hover:bg-blue-500 hover:text-white'><span className='text-xl font-semibold mr-2'>G</span>Google</Button>
+                            <Button variant='outline' className='border-blue-500 hover:bg-blue-500 hover:text-white'><span className='text-xl font-semibold mr-2'>f</span>Facebook</Button>
+                        </div>
+                        <p className='uppercase text-xs text-slate-500 m-3'>or continue with</p>
+                        <div className='flex flex-col gap-2 mx-auto max'>
+                            <Label className='text-lg self-start'>Email</Label>
+                            <Input type='email' placeholder='Email' onChangeCapture={handleChange}/>
+                            <Label className='text-lg self-start'>Username</Label>
+                            <Input type='username' placeholder='Username' onChangeCapture={handleChange}/>
+                            <Label className='text-lg self-start'>Password</Label>
+                            <Input type='password' placeholder='Password' onChangeCapture={handleChange}/>
+                        </div>
+                        <div className='pt-5'>
+                            <Button className='w-full uppercase text-md p-3 rounded-xl' type="submit">Sign Up</Button>
+                        </div>
+                    </form>
                 </div>
             </CardContent>
             <CardFooter className='flex gap-2 items-center'>
@@ -49,6 +84,11 @@ export default function SignUp() {
                     <Link to='/' className='text-blue-500 font-semibold text-sm hover:underline'>SignIn</Link>
             </CardFooter>
         </Card>
+        {
+          errorMessage && (
+            <p>{errorMessage}</p>
+          )
+        }
     </div>
     </>
 
