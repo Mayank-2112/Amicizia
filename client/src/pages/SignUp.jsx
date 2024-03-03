@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Link, useNavigate } from 'react-router-dom';
+import OAuth from '@/components/myComponents/OAuth';
   
 export default function SignUp() {
     const [formData, setFormData]= useState({});
@@ -60,10 +61,7 @@ export default function SignUp() {
             <CardContent>
                 <div className='max-w-4xl w-full'>
                     <form onSubmit={handleSubmit}>
-                        <div className='flex gap-4 mx-auto justify-evenly w-full'>
-                            <Button variant='outline' className='border-blue-500 hover:bg-blue-500 hover:text-white'><span className='text-xl font-semibold mr-2'>G</span>Google</Button>
-                            <Button variant='outline' className='border-blue-500 hover:bg-blue-500 hover:text-white'><span className='text-xl font-semibold mr-2'>f</span>Facebook</Button>
-                        </div>
+                        <OAuth/>
                         <p className='uppercase text-xs text-slate-500 m-3'>or continue with</p>
                         <div className='flex flex-col gap-2 mx-auto max'>
                             <Label className='text-lg self-start'>Email</Label>
