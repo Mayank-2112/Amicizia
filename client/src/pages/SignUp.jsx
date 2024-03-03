@@ -67,11 +67,11 @@ export default function SignUp() {
                         <p className='uppercase text-xs text-slate-500 m-3'>or continue with</p>
                         <div className='flex flex-col gap-2 mx-auto max'>
                             <Label className='text-lg self-start'>Email</Label>
-                            <Input type='email' placeholder='Email' onChange={handleChange}/>
+                            <Input type='email' placeholder='Email' id='email' onChange={handleChange}/>
                             <Label className='text-lg self-start'>Username</Label>
-                            <Input type='username' placeholder='Username' onChange={handleChange}/>
+                            <Input type='username' placeholder='Username' id='username' onChange={handleChange}/>
                             <Label className='text-lg self-start'>Password</Label>
-                            <Input type='password' placeholder='Password' onChange={handleChange}/>
+                            <Input type='password' placeholder='Password' id='password' onChange={handleChange}/>
                         </div>
                         <div className='pt-5'>
                             <Button className='w-full uppercase text-md p-3 rounded-xl' type="submit">Sign Up</Button>
