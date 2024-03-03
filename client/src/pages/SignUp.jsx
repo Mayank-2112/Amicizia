@@ -67,11 +67,11 @@ export default function SignUp() {
                         <p className='uppercase text-xs text-slate-500 m-3'>or continue with</p>
                         <div className='flex flex-col gap-2 mx-auto max'>
                             <Label className='text-lg self-start'>Email</Label>
-                            <Input type='email' placeholder='Email' onChangeCapture={handleChange}/>
+                            <Input type='email' placeholder='Email' onChange={handleChange}/>
                             <Label className='text-lg self-start'>Username</Label>
-                            <Input type='username' placeholder='Username' onChangeCapture={handleChange}/>
+                            <Input type='username' placeholder='Username' onChange={handleChange}/>
                             <Label className='text-lg self-start'>Password</Label>
-                            <Input type='password' placeholder='Password' onChangeCapture={handleChange}/>
+                            <Input type='password' placeholder='Password' onChange={handleChange}/>
                         </div>
                         <div className='pt-5'>
                             <Button className='w-full uppercase text-md p-3 rounded-xl' type="submit">Sign Up</Button>
@@ -84,12 +84,12 @@ export default function SignUp() {
                     <Link to='/' className='text-blue-500 font-semibold text-sm hover:underline'>SignIn</Link>
             </CardFooter>
         </Card>
+      </div>
         {
           errorMessage && (
             <p>{errorMessage}</p>
           )
         }
-    </div>
     </>
 
   )
