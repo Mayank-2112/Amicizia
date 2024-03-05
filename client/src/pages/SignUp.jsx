@@ -10,8 +10,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '@/components/myComponents/OAuth';
+import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons';
   
 export default function SignUp() {
     const [formData, setFormData]= useState({});
@@ -40,7 +43,7 @@ export default function SignUp() {
         }
         setLoading(false);
         if(res.ok){
-          navigate('/');
+          navigate('/home');
         }
     } catch (error) {
         setErrorMessage(error.message);
@@ -53,41 +56,53 @@ export default function SignUp() {
         <div className='flex-auto w-72'>
             <img src='../images/SignIn_Image.png' alt="image" className='h-full w-full'/>
         </div>
-        <Card className='flex-auto w-24 text-center'>
-            <CardHeader>
-                <CardTitle className='font-semibold text-4xl uppercase font-paci m-5'>Amicizia</CardTitle>
-                <CardDescription>Enter your email, username and password to create an account</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className='max-w-4xl w-full'>
-                    <form onSubmit={handleSubmit}>
-                        <OAuth/>
-                        <p className='uppercase text-xs text-slate-500 m-3'>or continue with</p>
-                        <div className='flex flex-col gap-2 mx-auto max'>
-                            <Label className='text-lg self-start'>Email</Label>
-                            <Input type='email' placeholder='Email' id='email' onChange={handleChange}/>
-                            <Label className='text-lg self-start'>Username</Label>
-                            <Input type='username' placeholder='Username' id='username' onChange={handleChange}/>
-                            <Label className='text-lg self-start'>Password</Label>
-                            <Input type='password' placeholder='Password' id='password' onChange={handleChange}/>
-                        </div>
-                        <div className='pt-5'>
-                            <Button className='w-full uppercase text-md p-3 rounded-xl' type="submit">Sign Up</Button>
-                        </div>
-                    </form>
-                </div>
-            </CardContent>
-            <CardFooter className='flex gap-2 items-center'>
-                <p className='text-slate-500 text-sm'>Already have an account?</p>
-                    <Link to='/' className='text-blue-500 font-semibold text-sm hover:underline'>SignIn</Link>
-            </CardFooter>
-        </Card>
-      </div>
-        {
+        <div className='flex-auto w-24'>
+          <Card>
+              <CardHeader>
+                  <CardTitle className='font-semibold text-4xl uppercase font-paci m-5  text-center'>Amicizia</CardTitle>
+                  <CardDescription>Enter your email, username and password to create an account</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <div className='max-w-4xl w-full'>
+                      <form onSubmit={handleSubmit}>
+                          <OAuth/>
+                          <p className='uppercase text-xs text-slate-500 m-3 text-center'>or continue with</p>
+                          <div className='flex flex-col gap-2 mx-auto'>
+                              <Label className='text-lg self-start'>Email</Label>
+                              <Input type='email' placeholder='Email' id='email' onChange={handleChange}/>
+                              <Label className='text-lg self-start'>Username</Label>
+                              <Input type='username' placeholder='Username' id='username' onChange={handleChange}/>
+                              <Label className='text-lg self-start'>Password</Label>
+                              <Input type='password' placeholder='Password' id='password' onChange={handleChange}/>
+                          </div>
+                          <div className='pt-5'>
+                          {loading ? (
+                              <Button disabled className='w-full uppercase text-md p-3 rounded-xl'><ReloadIcon className="mr-2 h-4 w-4 animate-spin" /></Button>
+                            ):(
+                              <Button className='w-full uppercase text-md p-3 rounded-xl' type='submit' >Sign In</Button>
+                            )}
+                          </div>
+                      </form>
+                  </div>
+              </CardContent>
+              <CardFooter className='flex gap-2 items-center'>
+                  <p className='text-slate-500 text-sm'>Already have an account?</p>
+                      <Link to='/' className='text-blue-500 font-semibold text-sm hover:underline'>SignIn</Link>
+              </CardFooter>
+          </Card>
+          {
           errorMessage && (
-            <p>{errorMessage}</p>
+            <Alert variant='destructive' className='mt-10'>
+              <ExclamationTriangleIcon className="h-4 w-4" />
+              <AlertTitle>Error!</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+
           )
         }
+        </div>
+      </div>
+        
     </>
 
   )

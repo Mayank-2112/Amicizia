@@ -11,27 +11,29 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch} from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '@/redux/user/userSlice';
 import OAuth from '@/components/myComponents/OAuth';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons';
   
 export default function SignIn() {
     const [formData, setFormData]= useState({});
-  // const {loading, error: errorMessage} = useSelector((state) => state.user)
+  const {loading, error: errorMessage} = useSelector((state) => state.user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const handleChange = (e)=>{
     setFormData({...formData, [e.target.id]:e.target.value});
   }
-  console.log(formData);
   const handleSubmit = async (e)=>{
     e.preventDefault();
-    if (!formData.email || !formData.password){
+    if (!formData.username || !formData.password){
       return dispatch(signInFailure('Please fill all the fields!!'));
     }
     try {
       dispatch(signInStart());
-        const res = await fetch('/server/auth/signup',{
+        const res = await fetch('/server/auth/signin',{
           method:'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(formData),
@@ -42,7 +44,7 @@ export default function SignIn() {
         }
         if(res.ok){
           dispatch(signInSuccess(data));
-          navigate('/');
+          navigate('/home');
         }
     } catch (error) {
         dispatch(signInFailure(error.message));
@@ -54,34 +56,51 @@ export default function SignIn() {
         <div className='flex-auto w-72'>
             <img src='../images/SignIn_Image.png' alt="image" className='h-full w-full'/>
         </div>
-        <Card className='flex-auto w-24 text-center'>
-            <CardHeader>
-                <CardTitle className='font-semibold text-4xl uppercase font-paci m-5'>Amicizia</CardTitle>
-                <CardDescription>Enter your username and password to login</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className='max-w-4xl w-full'>
-                    <form onSubmit={handleSubmit}>
-                        <OAuth/>
-                        <p className='uppercase text-xs text-slate-500 m-3'>or continue with</p>
-                        <div className='flex flex-col gap-2 mx-auto max'>
+        <div className='flex-auto w-24'>
+          <Card>
+              <CardHeader>
+                  <CardTitle className='font-semibold text-4xl uppercase font-paci m-5 text-center'>Amicizia</CardTitle>
+                  <CardDescription>Enter your username and password to login</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <div className='max-w-4xl w-full'>
+                      <form onSubmit={handleSubmit}>
+                          <OAuth/>
+                          <p className='uppercase text-xs text-slate-500 m-3 text-center'>or continue with</p>
+                          <div className='flex flex-col gap-2 mx-auto'>
                             <Label className='text-lg self-start'>Username</Label>
-                            <Input type='username' placeholder='Username' id='username' onChange={handleChange}/>
+                            <Input type='username' placeholder='Username' id='username' onChangeCapture={handleChange}/>
                             <Label className='text-lg self-start'>Password</Label>
-                            <Input type='password' placeholder='Password' id='password' onChange={handleChange}/>
-                        </div>
-                        <div className='pt-5'>
-                            <Button className='w-full uppercase text-md p-3 rounded-xl' type='submit'>Sign In</Button>
-                        </div>
-                    </form>
-                </div>
-            </CardContent>
-            <CardFooter className='flex gap-2'>
-                <p className='text-slate-500 text-sm'>Don't have an account?</p>
-                <Link to='/sign-up' className='text-blue-500 font-semibold text-sm hover:underline'>SignUp</Link>
-            </CardFooter>
-        </Card>
+                            <Input type='password' placeholder='Password' id='password' onChangeCapture={handleChange}/>
+                          </div>
+                          <div className='pt-5'>
+                            {loading ? (
+                              <Button disabled className='w-full uppercase text-md p-3 rounded-xl'><ReloadIcon className="mr-2 h-4 w-4 animate-spin" /></Button>
+                            ):(
+                              <Button className='w-full uppercase text-md p-3 rounded-xl' type='submit' >Sign In</Button>
+                            )}
+                          </div>
+                      </form>
+                  </div>
+              </CardContent>
+              <CardFooter className='flex gap-2'>
+                  <p className='text-slate-500 text-sm'>Don't have an account?</p>
+                  <Link to='/sign-up' className='text-blue-500 font-semibold text-sm hover:underline'>SignUp</Link>
+              </CardFooter>
+          </Card>
+          {
+          errorMessage && (
+            <Alert variant='destructive' className='mt-10'>
+              <ExclamationTriangleIcon className="h-4 w-4" />
+              <AlertTitle>Error!</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+
+          )
+        }
+        </div>
     </div>
+    
     </>
 
   )
