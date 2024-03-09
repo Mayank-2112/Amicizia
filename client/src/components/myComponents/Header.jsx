@@ -1,15 +1,18 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { BellIcon, MagnifyingGlassIcon, MoonIcon } from '@radix-ui/react-icons'
-import { useSelector } from 'react-redux'
+import { BellIcon, MoonIcon, SunIcon } from '@radix-ui/react-icons'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { toggleTheme } from '@/redux/theme/themeSlice'
 
 
 export default function Header() {
+  const dispatch = useDispatch();
   const {currentUser} = useSelector((state)=> state.user);
-
+  const {theme} = useSelector((state)=> state.theme);
+  console.log(theme);
   return (
     <>
         <nav className='border-b-2 flex justify-between sm:px-10 px-3'>
@@ -21,7 +24,8 @@ export default function Header() {
         </div>
         <div className='flex items-center gap-4'>
           <div className='flex gap-4 items-center'>
-            <Button variant='ghost' className='hover:bg-blue-500 hover:text-white rounded-full hidden sm:inline'><MoonIcon className='font-bold w-5 h-5'/></Button>
+            <Button variant='ghost' className='hover:bg-blue-500 hover:text-white rounded-full hidden sm:inline' onClick={()=>dispatch(toggleTheme())}>
+              {theme === 'light' ? <MoonIcon className='font-bold w-5 h-5'/> : <SunIcon className='font-bold w-5 h-5'/>}</Button>
             <Button variant='ghost' className='hover:bg-blue-500 hover:text-white rounded-full'><BellIcon className='font-bold w-5 h-5'/></Button>
           </div>
           <Avatar>
